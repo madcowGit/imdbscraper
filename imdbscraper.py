@@ -1,71 +1,59 @@
-import requests, json, jmespath, os
+from flask import Flask, request, jsonify
+import requests, json, jmespath
 from lxml import html
 
+app = Flask(__name__)
 
-url = "https://www.imdb.com/list/ls060044601/?sort=release_date%2Cdesc"
-#url = "https://www.imdb.com/list/ls040455003/?sort=release_date%2Cdesc"
-#url = "https://www.imdb.com/pt/list/ls024863935/?sort=release_date%2Cdesc"
 xpath = "props.pageProps.mainColumnData.list.titleListItemSearch."
-headers={"User-Agent": "Mozilla/5.0"}
 
 def get_html(url):
-    # get page
-    resp = requests.get(
-        url, 
-        headers={"User-Agent": "Mozilla/5.0"}
-    )
+    resp = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
     if resp.status_code != 200:
-        print("Error fetching: %s" % (resp.status_code))
-        exit(1)
+        return None
     tree = html.fromstring(resp.content)
     script = tree.xpath('//script[@id="__NEXT_DATA__"]/text()')
     return json.loads(script[0])
 
-
 def process_json(raw_json):
-    # process output
-    next_page = jmespath.search(f"{xpath}pageInfo.hasNextPage", raw_json)    
+    next_page = jmespath.search(f"{xpath}pageInfo.hasNextPage", raw_json)
     processed_json = jmespath.search(xpath + "edges[].listItem.{id: id, title: titleText.text}", raw_json)
-
     return next_page, processed_json
 
-def update_list(movies,processed_json):
-    # add items to movies list
+def update_list(movies, processed_json):
     for item in processed_json:
-        imdb_id = item['id']
-        title = item['title']
         movies.append({
-            "title": title,
-            "imdb_id": imdb_id
+            "title": item['title'],
+            "imdb_id": item['id']
         })
     return movies
 
-# get initial page
-raw_json = get_html(url)
-total = jmespath.search(f"{xpath}total", raw_json) # how many items on the list?
+@app.route('/scrape', methods=['GET'])
+def scrape():
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"error": "Missing 'url' parameter"}), 400
 
-# process the first page
-next_page, processed_json = process_json(raw_json)
+    raw_json = get_html(url)
+    if not raw_json:
+        return jsonify({"error": "Failed to fetch IMDb page"}), 500
 
-# add to movies list and continue for all pages
-movies = []
-while next_page:
-    print(len(movies), "of", total)
-    movies = update_list(movies,processed_json)
-        
-    raw_json = get_html(url+f"&page={len(movies)//250+1}")
+    total = jmespath.search(f"{xpath}total", raw_json)
     next_page, processed_json = process_json(raw_json)
 
-# one more time for the last page
-movies = update_list(movies,processed_json)
+    movies = []
+    while next_page:
+        movies = update_list(movies, processed_json)
+        next_page_num = len(movies) // 100 + 1
+        raw_json = get_html(url + f"&page={next_page_num}")
+        next_page, processed_json = process_json(raw_json)
 
-print(total)
+    movies = update_list(movies, processed_json)
 
+    return jsonify({
+        "total": total,
+        "count": len(movies),
+        "movies": movies
+    })
 
-# convert list to json
-json_dumps = json.dumps(movies, indent=2, ensure_ascii=False)
-
-print(json_dumps)
-print(movies.__len__())
-#with open('./data/list_1001_movies_before_die.json', 'w', encoding='utf-8') as file:
-#    json.dump(movies_sorted, file, indent=2)
+if __name__ == '__main__':
+    app.run(debug=True)
