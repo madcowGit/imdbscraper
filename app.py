@@ -29,11 +29,13 @@ def update_list(movies, processed_json):
 
 @app.route('/scrape', methods=['GET'])
 def scrape():
-    url = request.args.get('url')
-    if not url:
-        return jsonify({"error": "Missing 'url' parameter"}), 400
+    # only use list_id as input
+    list_id = request.args.get('list')
+    if not list_id:
+        return jsonify({"error": "Missing 'list' parameter"}), 400
 
-    raw_json = get_html(url)
+    base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
+    raw_json = get_html(base_url)
     if not raw_json:
         return jsonify({"error": "Failed to fetch IMDb page"}), 500
 
@@ -41,10 +43,12 @@ def scrape():
     next_page, processed_json = process_json(raw_json)
 
     movies = []
+    page_num = 1
     while next_page:
         movies = update_list(movies, processed_json)
-        next_page_num = len(movies) // 100 + 1
-        raw_json = get_html(url + f"&page={next_page_num}")
+        page_num += 1
+        paged_url = f"{base_url}&page={page_num}"
+        raw_json = get_html(paged_url)
         next_page, processed_json = process_json(raw_json)
 
     movies = update_list(movies, processed_json)
@@ -55,9 +59,7 @@ def scrape():
         "movies": movies
     })
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     import os
-    
-    port = int(os.environ.get("PORT", 10000))  # Render sets PORT to 10000 by default
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
