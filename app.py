@@ -53,11 +53,7 @@ def scrape():
 
     movies = update_list(movies, processed_json)
 
-    return jsonify({
-        "total": total,
-        "count": len(movies),
-        "movies": movies
-    })
+    return jsonify(movies)
 
 if __name__ == '__main__':
     import os
