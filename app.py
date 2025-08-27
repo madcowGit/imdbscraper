@@ -22,7 +22,7 @@ def process_json(raw_json):
 def update_list(movies, processed_json):
     for item in processed_json:
         movies.append({
-            "title": item['title'],
+            #"title": item['title'],
             "imdb_id": item['id']
         })
     return movies
