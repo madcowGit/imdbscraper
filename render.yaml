@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: imdb-scraper
+    env: python
+    buildCommand: ""
+    startCommand: "python app.py"
