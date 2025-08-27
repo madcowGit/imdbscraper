@@ -30,7 +30,7 @@ def update_list(movies, processed_json):
 @app.route('/scrape', methods=['GET'])
 def scrape():
     # only use list_id as input
-    list_id = request.args.get('list')
+    list_id = request.args.get('list_id')
     if not list_id:
         return jsonify({"error": "Missing 'list' parameter"}), 400
 
