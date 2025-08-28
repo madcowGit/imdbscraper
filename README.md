@@ -1,4 +1,4 @@
-This repository is connect to run a flask server on Render. It scrapes IMDB lists and returns them in StevenLu Custom format (for use in e.g. Radarr)
+This is a docker container flask app that scrapes an IMDB list and returns them in StevenLu Custom format (for use in e.g. Radarr)
 
-example:
-https://imdbscraper-do9f.onrender.com/scrape?list_id=ls040455003
+usage example:
+https://<your-url>/scrape?list_id=ls040455003
