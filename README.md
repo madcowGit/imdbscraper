@@ -17,7 +17,7 @@ It is a JSON containing only imdb_ids
 ```
 
 # Deploy
-`http://<your-url>/scrape?list_id=<imdblistid>`
+`http://<your-url:port>/scrape?list_id=<imdblistid>`
 
 ## Example docker-compose
 
@@ -34,6 +34,6 @@ services:
 ## usage example:
 ### Radarr
 choose StevenLu Custom list
-point URL to `http://<your-url>/scrape?list_id=ls040455003`
+point URL to `http://<your-url:port>/scrape?list_id=ls040455003`
 ### curl
-`curl http://<your-url>/scrape?list_id=ls040455003`
+`curl http://<your-url:port>/scrape?list_id=ls040455003`
