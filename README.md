@@ -24,7 +24,7 @@ version: "3.9"
 services:
  imdbscraper:
   container_name: imdblistscraper
-  image: ghcr.io/madcowgit/imdbscraper:main
+  image: ghcr.io/madcowgit/imdbscraper:latest
   ports:
     - "10000:10000"
   restart: unless-stopped
