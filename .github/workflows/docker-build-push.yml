@@ -23,7 +23,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ format('madcowgit/imdbscraper:{0}', github.ref_name) }} .
+          docker build -t ghcr.io/${{ format('madcowgit/imdbscraper:{0}', github.ref_name) }} -t ghcr.io/madcowgit/imdbscraper:latest .
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ format('madcowgit/imdbscraper:{0}', github.ref_name) }}
+          docker push ghcr.io/${{ format('madcowgit/imdbscraper:{0}', github.ref_name) }}          
+          docker push ghcr.io/madcowgit/imdbscraper:latest
