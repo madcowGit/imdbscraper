@@ -17,9 +17,9 @@ It is a JSON containing only imdb_ids
 ```
 
 # Deploy
+`http://<your-url>/scrape?list_id=<imdblistid>`
 
 ## Example docker-compose
-`http://<your-url>/scrape?list_id=<imdblistid>`
 
 ```
 version: "3.9"
