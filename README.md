@@ -19,7 +19,7 @@ It is a JSON containing only imdb_ids
 # Deploy
 
 ## Example docker-compose
-http://<your-url>/scrape?list_id=<imdblistid>
+`http://<your-url>/scrape?list_id=<imdblistid>`
 
 ```
 version: "3.9"
