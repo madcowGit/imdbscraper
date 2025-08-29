@@ -1,3 +1,10 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/madcowGit/imdbscraper?style=for-the-badge&logo=github)
+![GitHub issues](https://img.shields.io/github/issues/madcowGit/imdbscraper?style=for-the-badge&logo=github)
+![GitHub stars](https://img.shields.io/github/stars/madcowGit/imdbscraper?style=for-the-badge&logo=github)
+![GitHub release](https://img.shields.io/github/v/release/madcowGit/imdbscraper?style=for-the-badge&logo=github)
+![Docker](https://img.shields.io/badge/Docker-ready-blue?style=for-the-badge&logo=docker)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python)
+
 # Description
 This is a docker container flask app that scrapes an IMDB list and returns them in StevenLu Custom format (for use in e.g. Radarr) and works for lists consisting of multiple pages
 
