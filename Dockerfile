@@ -1,21 +1,28 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
-# Set the working directory in the container
+# Install system dependencies
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    libffi-dev \
+    openssl-dev \
+    python3-dev \
+    libxml2-dev \
+    libxslt-dev \
+    build-base
+
+# Set working directory
 WORKDIR /app
 
-# Copy requirements.txt and install dependencies
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
+# Copy project files
 COPY . .
 
-# Expose the port Flask runs on (default 10000, can be overridden by PORT env)
+# Expose port
 EXPOSE 10000
 
-# Set environment variable for Python
-ENV PYTHONUNBUFFERED=1
-
-# Run the application
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
+# Run the app with gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
