@@ -21,7 +21,7 @@ def scrape_tvshows():
     if not list_id:
         return jsonify({"error": "Missing 'list' parameter"}), 400
 
-    tvshows = get_tvshows(list_id)
+    tvshows = get_tvshows(list_id,tvdbapikey)
 
     return tvshows
 
