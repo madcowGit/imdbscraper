@@ -49,12 +49,62 @@ def get_list(list_id):
 
     movies = update_list(movies, processed_json)
 
-    return jsonify(movies)
+    return movies
+
     
     
 def get_movies(list_id):
-    moviesjson = get_list(list_id)
-    return moviesjson
+    listitems = get_list(list_id)
+    # Filter to only items with type Movie
+    movies_filtered = [item for item in listitems if item.get("type").lower() in ['movie', 'tv movie']]
+    return jsonify(movies_filtered)
+
+def get_tvshows(list_id,tvdb_apikey):
+    listitems = get_list(list_id)
+    # Filter to only items with type Movie
+    tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]   
+    
+        
+        
+    def get_tvdb_id(imdb_id, apikey=None):
+        """
+        Looks up TVDb ID using IMDb ID.
+        Requires TVDb API v4 key.
+        """
+        if apikey is None:
+            # You need to provide your TVDb API key!
+            raise Exception("TVDb API key not provided.")
+        url = f"https://api4.thetvdb.com/v4/search?imdbId={imdb_id}"
+        headers = {
+            "Authorization": f"Bearer {apikey}",
+            "Accept": "application/json"
+        }
+        resp = requests.get(url, headers=headers)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        # TVDb API v4 returns search results in 'data'
+        if "data" in data and data["data"]:
+            return data["data"][0].get("tvdb_id") or data["data"][0].get("id")
+        return None
+
+
+    tvshows_tvdb = []
+    for show in tvshows_filtered:
+        imdb_id = show.get('imdb_id')
+        if imdb_id:
+            tvdb_id = get_tvdb_id(imdb_id, apikey=tvdb_apikey)
+            results.append({
+                #'imdb_id': imdb_id,
+                'tvdb_id': tvdb_id
+            })
+    
+    
+    return jsonify(tvshows_tvdb)
+    
+
+    
+    
 
 if __name__ == '__main__':
     # do nothing
