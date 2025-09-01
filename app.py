@@ -14,6 +14,23 @@ else:
     tvdbapikey = None
 
 
+def get_tvdb_token(api_key):
+    url = "https://api.thetvdb.com/login"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "apikey": api_key
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    if response.status_code == 200:
+        return response.json().get("token")
+    else:
+        print(f"Failed to get token: {response.status_code}")
+        return None
+
 
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():
@@ -36,7 +53,9 @@ def scrape_tvshows():
         return jsonify({"error": "TVDB API key not configured"}), 500
 
 
-    tvshows = get_tvshows(list_id,tvdbapikey)
+    token = get_tvdb_token(tvdbapikey)
+
+    tvshows = get_tvshows(list_id,token)
 
     return tvshows
 

@@ -1,7 +1,7 @@
+
 from flask import Flask, request, jsonify
 import requests, json, jmespath
 from lxml import html
-
 
 xpath = "props.pageProps.mainColumnData.list.titleListItemSearch."
 
@@ -21,16 +21,13 @@ def process_json(raw_json):
 def update_list(movies, processed_json):
     for item in processed_json:
         movies.append({
-            #"title": item['title'],
-            "imdb_id": item['id'],            
+            "imdb_id": item['id'],
             "type": item.get('type', '') 
         })
     return movies
 
 def get_list(list_id):
-
     base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
-    
     raw_json = get_html(base_url)
     if not raw_json:
         return jsonify({"error": "Failed to fetch IMDb page"}), 500
@@ -43,69 +40,49 @@ def get_list(list_id):
     while next_page:
         movies = update_list(movies, processed_json)
         page_num += 1
-        paged_url = f"{base_url}&page={page_num}"
+        paged_url = f"{base_url}&amp;page={page_num}"
         raw_json = get_html(paged_url)
         next_page, processed_json = process_json(raw_json)
 
     movies = update_list(movies, processed_json)
-
     return movies
 
-    
-    
 def get_movies(list_id):
     listitems = get_list(list_id)
-    # Filter to only items with type Movie
     movies_filtered = [item for item in listitems if item.get("type").lower() in ['movie', 'tv movie']]
     return jsonify(movies_filtered)
 
-def get_tvshows(list_id,tvdb_apikey):
+def get_tvshows(list_id, jwt_token):
     listitems = get_list(list_id)
-    # Filter to only items with type Movie
-    tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]   
-    
-        
-        
-    def get_tvdb_id(imdb_id, apikey=None):
-        """
-        Looks up TVDb ID using IMDb ID.
-        Requires TVDb API v4 key.
-        """
-        if apikey is None:
-            # You need to provide your TVDb API key!
-            raise Exception("TVDb API key not provided.")
+    tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
+
+    def get_tvdb_id(imdb_id, token=None):
+        if token is None:
+            raise Exception("TVDb JWT token not provided.")
         url = f"https://api4.thetvdb.com/v4/search?imdbId={imdb_id}"
         headers = {
-            "Authorization": f"Bearer {apikey}",
+            "Authorization": f"Bearer {token}",
             "Accept": "application/json"
         }
         resp = requests.get(url, headers=headers)
         if resp.status_code != 200:
             return None
         data = resp.json()
-        # TVDb API v4 returns search results in 'data'
         if "data" in data and data["data"]:
             return data["data"][0].get("tvdb_id") or data["data"][0].get("id")
         return None
-
 
     tvshows_tvdb = []
     for show in tvshows_filtered:
         imdb_id = show.get('imdb_id')
         if imdb_id:
-            tvdb_id = get_tvdb_id(imdb_id, apikey=tvdb_apikey)
+            tvdb_id = get_tvdb_id(imdb_id, token=jwt_token)
             tvshows_tvdb.append({
-                #'imdb_id': imdb_id,
-                'tvdb_id': tvdb_id
+                'imdb_id': imdb_id,
+                'tvdbId': tvdb_id
             })
-    
-    
-    return jsonify(tvshows_tvdb)
-    
 
-    
-    
+    return jsonify(tvshows_tvdb)
 
 if __name__ == '__main__':
-    # do nothing
     print("hello world")
