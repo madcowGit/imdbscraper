@@ -3,6 +3,17 @@ from imdbscraper import get_movies, get_tvshows
 
 app = Flask(__name__)
 
+
+# Load TVDB API key from Docker secrets file
+secrets_file_path = os.environ.get("TVDBAPISECRETSFILE")
+if secrets_file_path and os.path.exists(secrets_file_path):
+    with open(secrets_file_path, "r") as f:
+        tvdbapikey = f.read().strip()
+else:
+    tvdbapikey = None
+
+
+
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():
     # only use list_id as input
@@ -19,7 +30,10 @@ def scrape_tvshows():
     # only use list_id as input
     list_id = request.args.get('list_id')
     if not list_id:
-        return jsonify({"error": "Missing 'list' parameter"}), 400
+        return jsonify({"error": "Missing 'list_id' parameter"}), 400
+    if not tvdbapikey:
+        return jsonify({"error": "TVDB API key not configured"}), 500
+
 
     tvshows = get_tvshows(list_id,tvdbapikey)
 
