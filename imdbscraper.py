@@ -94,7 +94,7 @@ def get_tvshows(list_id,tvdb_apikey):
         imdb_id = show.get('imdb_id')
         if imdb_id:
             tvdb_id = get_tvdb_id(imdb_id, apikey=tvdb_apikey)
-            results.append({
+            tvshows_tvdb.append({
                 #'imdb_id': imdb_id,
                 'tvdb_id': tvdb_id
             })
