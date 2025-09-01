@@ -15,14 +15,15 @@ def get_html(url):
 
 def process_json(raw_json):
     next_page = jmespath.search(f"{xpath}pageInfo.hasNextPage", raw_json)
-    processed_json = jmespath.search(xpath + "edges[].listItem.{id: id, title: titleText.text}", raw_json)
+    processed_json = jmespath.search(xpath + "edges[].listItem.{id: id, title: titleText.text, type: titleType.text}", raw_json)
     return next_page, processed_json
 
 def update_list(movies, processed_json):
     for item in processed_json:
         movies.append({
             #"title": item['title'],
-            "imdb_id": item['id']
+            "imdb_id": item['id'],            
+            "type": item.get('type', '') 
         })
     return movies
 
@@ -49,6 +50,11 @@ def get_list(list_id):
     movies = update_list(movies, processed_json)
 
     return jsonify(movies)
+    
+    
+def get_movies(list_id):
+    moviesjson = get_list(list_id)
+    return moviesjson
 
 if __name__ == '__main__':
     # do nothing
