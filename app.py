@@ -55,6 +55,8 @@ def scrape_tvshows():
 
 
     token = get_tvdb_token(tvdbapikey)
+    
+    print(token)
 
     tvshows = get_tvshows(list_id,token)
 
