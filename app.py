@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from imdbscraper import get_movies, get_tvshows
+import os
 
 app = Flask(__name__)
 
