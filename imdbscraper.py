@@ -43,15 +43,19 @@ def get_watchlist(user_id):
         # Extract items and pagination info
         processed_json = jmespath.search(
             f"{watchlist_xpath}.items[].{{id: id, title: title.titleText.text, type: title.titleType.text}}",
-            raw_json
+            raw_json            
+
         )
         next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
-
+        print(f"next_page = {next_page}")
+        
         if processed_json:
             listitems = update_list(listitems, processed_json)
 
         page_num += 1
-
+    
+    print(jsonify(listitems))
+    
     return listitems
 
 def get_list(list_id):
