@@ -6,41 +6,48 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python)
 
 # Description
-This is a docker container flask app that scrapes an IMDB list and returns them in StevenLu Custom format (for use in e.g. Radarr) and works for lists consisting of multiple pages
+This is a docker container flask app that scrapes an IMDB list (and works for lists consisting of multiple pages) and returns a list for Radarr or Sonarr
+## Radarr
+a list is returned in StevenLu Custom format (for use in e.g. Radarr) 
+`[{"imdb_id": "tt16744566"},{"imdb_id": "tt32243339"}]`
 
-# Output
-Output is formatted so that Radarr will accept it as a StevenLu Custom list.
-It is a JSON containing only imdb_ids
+see: [https://wiki.servarr.com/radarr/supported#stevenlu2import](https://wiki.servarr.com/radarr/supported#stevenlu2import)
+## Sonarr
+an imdb list is read and filtered to get all tvshows. Then the tvdb api is used to lookup the tvdbId. This list is returned in Sonarr Custom format 
+`[{ "tvdbId": "75837" }, { "tvdbId": "77847" }, { "tvdbId": "78299" }, { "tvdbId": "72756" } ]`
 
-```
-[
-  {
-    "imdb_id": "tt16744566"
-  },
-  {
-    "imdb_id": "tt32243339"
-  }
-]
-```
+note that this format is not documenten in [https://wiki.servarr.com/sonarr/supported#lists](https://wiki.servarr.com/sonarr/supported#lists)
 
 # Deploy
-`http://<your-url:port>/scrape?list_id=<imdblistid>`
+Endpoint for movies on list:
+`http://<your-url:port>/scrape_movies?list_id=<imdblistid>`
+
+Endpoint for tv shows on list:
+`http://<your-url:port>/scrape_tvshows?list_id=<imdblistid>`
 
 ## Example docker-compose
-
+use a secrets file to store the api key from tvdb
 ```
 version: "3.9"
 services:
  imdbscraper:
-  container_name: imdblistscraper
-  image: ghcr.io/madcowgit/imdbscraper:latest
+  image: ghcr.io/madcowgit/imdbscraper:devel
   ports:
-    - "10000:10000"
+    - "10001:10000"
+  environment:
+    - TVDBAPISECRETSFILE=/run/secrets/tvdbapikeyfile
   restart: unless-stopped
+  secrets:
+    - tvdbapikeyfile
+
+secrets:
+  tvdbapikeyfile:
+    file: ./tvdbapikey
 ```
 ## usage example:
 ### Radarr
 choose StevenLu Custom list
-point URL to `http://<your-url:port>/scrape?list_id=ls040455003`
-### curl
-`curl http://<your-url:port>/scrape?list_id=ls040455003`
+point URL to `http://<your-url:port>/scrape_movies?list_id=<imdblistid>`
+### Sonarr
+choose Advanced Custom list
+point URL to `http://<your-url:port>/scrape_tvshows?list_id=<imdblistid>`
