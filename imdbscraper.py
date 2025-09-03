@@ -42,7 +42,7 @@ def get_watchlist(user_id):
 
         # Extract items and pagination info
         processed_json = jmespath.search(
-            f"{watchlist_xpath}.titleListItemSearch.items[].node.listItem.{{id: id, title: title.titleText.text, type: title.titleType.text}}",
+            f"{watchlist_xpath}.titleListItemSearch.edges[].listItem.{{id: id, title: title.titleText.text, type: title.titleType.text}}",
             raw_json            
 
         )
