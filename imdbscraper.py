@@ -47,7 +47,10 @@ def get_watchlist(user_id):
 
         )
         next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
-        print(f"next_page = {next_page}")
+        print(f"next_page = {next_page}")        
+        print(jsonify(processed_json))      
+        print(raw_json)
+        print(url)
         
         if processed_json:
             listitems = update_list(listitems, processed_json)
