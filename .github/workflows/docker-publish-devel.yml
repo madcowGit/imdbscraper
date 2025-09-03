@@ -27,3 +27,8 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ghcr.io/madcowgit/imdbscraper:devel
+          
+      - name: Trigger Portainer Webhook
+        run: |
+          curl -X POST https://portainer.khoe.synology.me/api/stacks/webhooks/19673045-18e9-40d7-b158-13e2090fceba
+
