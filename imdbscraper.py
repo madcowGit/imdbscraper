@@ -67,7 +67,7 @@ def get_tvshows(list_id, api_key):
     jwt_token = get_tvdb_token(api_key)
     
     def testToken(token):
-        url = "https://api4.thetvdb.com/v4/users"
+        url = "https://api4.thetvdb.com/v4/user"
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.get(url, headers=headers)
 
@@ -85,10 +85,9 @@ def get_tvshows(list_id, api_key):
     def get_tvdb_id(imdb_id, token=None):
         print(imdb_id)
         print(token)
-        url = f"https://api4.thetvdb.com/v4/search/remoteid"
-        headers = {"Authorization": f"Bearer {token}"}
-        params = {"remote_id": imdb_id, "remote_source": "imdb"}
-        response = requests.get(url, headers=headers, params=params)
+        url = f"https://api4.thetvdb.com/v4/search/remoteid/{imdb_id}"
+        headers = {"Authorization": f"Bearer {token}"}        
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
         if data["data"]:
