@@ -48,9 +48,9 @@ def get_watchlist(user_id):
         )
         next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
         
-        print(f"total nr of items = {raw_json['props']['pageProps']['totalItems']}")
-        print(f"ManUp = {raw_json['props']['pageProps']['mainColumnData']['predefinedList']['titleListItemSearch']['edges'][0]['listItem']['id']}")
-        print(f"next_page = {next_page}")        
+        #print(f"total nr of items = {raw_json['props']['pageProps']['totalItems']}")
+        #print(f"ManUp = {raw_json['props']['pageProps']['mainColumnData']['predefinedList']['titleListItemSearch']['edges'][0]['listItem']['id']}")
+        #print(f"next_page = {next_page}")        
         #print(jsonify(processed_json))      
         #print(raw_json)
         #print(url)
@@ -60,11 +60,17 @@ def get_watchlist(user_id):
 
         page_num += 1
     
-    print(jsonify(listitems))
+    #print(jsonify(listitems))
     
     return listitems
 
-def get_list(list_id):
+def get_list(list_id):    
+    if list_id.startswith("ls"):
+        get_list(list_id)
+    elif list_id.startswith("ur"):
+        get_watchlist(list_id)
+
+def get_userlist(list_id):
     base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
     raw_json = get_html(base_url)
     if not raw_json:

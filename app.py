@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from imdbscraper import get_movies, get_tvshows 
-from imdbscraper import get_list, get_watchlist
 import os
 import requests
 
@@ -15,27 +14,6 @@ if secrets_file_path and os.path.exists(secrets_file_path):
 else:
     tvdbapikey = None
 
-@app.route('/scrape_watchlist', methods=['GET'])    
-def scrape_watchlist():        
-    # only use user_id as input
-    user_id = request.args.get('user_id')
-    if not user_id:
-        return jsonify({"error": "Missing 'list' parameter"}), 400
-
-    listitems = get_watchlist(user_id)
-
-    return listitems
-
-@app.route('/scrape_list', methods=['GET'])    
-def scrape_list():
-    # only use list_id as input
-    list_id = request.args.get('list_id')
-    if not list_id:
-        return jsonify({"error": "Missing 'list' parameter"}), 400
-
-    movies = get_list(list_id)
-
-    return jsonify(movies)
     
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():
