@@ -62,7 +62,7 @@ def get_watchlist(user_id):
 
 def get_list(list_id):    
     if list_id.startswith("ls"):
-        imdblist = get_list(list_id)
+        imdblist = get_userlist(list_id)
     elif list_id.startswith("ur"):
         imdblist = get_watchlist(list_id)
     return imdblist
