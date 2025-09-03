@@ -100,12 +100,11 @@ def get_tvshows(list_id, api_key):
             print(data)        
             print(data.keys())               # Should show: dict_keys(['status', 'data'])
             print(data["data"])              # Should show: a list with one item
-            print(data["data"][0].keys())    # Should show: dict_keys(['movie'])
-            print(data["data"][0]["movie"]["name"])
+            print(data["data"][0].keys())    # Should show: dict_keys(['series'])
+            print(data["data"][0]["series"]["name"])
         
         if data["data"]:
-            #return data["data"][0]["movie"]["id"]
-            return data['data'][0]['movie']['id']
+            return data["data"][0]["series"]["id"]
         else:
             return None
 
