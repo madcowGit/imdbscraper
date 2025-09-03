@@ -56,7 +56,26 @@ def get_tvshows(list_id, jwt_token):
     listitems = get_list(list_id)
     tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
 
+
+    def testToken(token)    
+        url = "https://api4.thetvdb.com/v4/users"
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+
+        response = requests.get(url, headers=headers)
+
+        # Check if the token is valid
+        if response.status_code == 200:
+            print("✅ Token is valid.")
+            print(response.json())
+        else:
+            print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
+
+    testToken(jwt_token)    
+
     def get_tvdb_id(imdb_id, token=None):
+        print(imdb_id)
         url = f"https://api4.thetvdb.com/v4/search/remoteid"
         headers = {"Authorization": f"Bearer {token}"}
         params = {"remote_id": imdb_id, "remote_source": "imdb"}
