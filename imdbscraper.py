@@ -74,24 +74,24 @@ def get_tvshows(list_id, api_key):
         # Check if the token is valid
         if response.status_code == 200:
             print("✅ Token is valid.")
-            print(response.json())
+            #print(response.json())
         else:            
-            print(response.status_code)
-            print(response.text)
+            #print(response.status_code)
+            #print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
     testToken(jwt_token)    
 
     def get_tvdb_id(imdb_id, token=None):
-        print(imdb_id)
-        print(token)
+        #print(imdb_id)
+        #print(token)
         url = f"https://api4.thetvdb.com/v4/search/remoteid/{imdb_id}"
         headers = {"Authorization": f"Bearer {token}"}        
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
         if data["data"]:
-            return data["data"][0]["tvdb_id"]
+            return data["data"][0]["movie"]["id"]                  
         else:
             return None
 
