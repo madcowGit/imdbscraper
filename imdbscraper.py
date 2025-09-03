@@ -80,7 +80,7 @@ def get_tvshows(list_id, api_key):
             #print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
-    testToken(jwt_token)    
+    #testToken(jwt_token)    
 
     def get_tvdb_id(imdb_id, token=None):
         #print(imdb_id)
@@ -90,8 +90,15 @@ def get_tvshows(list_id, api_key):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
+        
+        print(data)        
+        print(data.keys())               # Should show: dict_keys(['status', 'data'])
+        print(data["data"])              # Should show: a list with one item
+        print(data["data"][0].keys())    # Should show: dict_keys(['movie'])
+        print(data["data"][0]["movie"]["name"])
+        
         if data["data"]:
-            return data["data"][0]["movie"]["id"]                  
+            return data["data"][0]["movie"]["id"]
         else:
             return None
 
