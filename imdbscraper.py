@@ -51,19 +51,12 @@ def get_watchlist(user_id):
         )
         next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
         
-        #print(f"total nr of items = {raw_json['props']['pageProps']['totalItems']}")
-        #print(f"ManUp = {raw_json['props']['pageProps']['mainColumnData']['predefinedList']['titleListItemSearch']['edges'][0]['listItem']['id']}")
-        #print(f"next_page = {next_page}")        
-        #print(jsonify(processed_json))      
-        #print(raw_json)
-        #print(url)
         
         if processed_json:
             listitems = update_list(listitems, processed_json)
 
         page_num += 1
     
-    #print(jsonify(listitems))
     
     return listitems
 
