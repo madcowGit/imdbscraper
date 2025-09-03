@@ -16,21 +16,12 @@ else:
 
 
 def get_tvdb_token(api_key):
-    url = "https://api.thetvdb.com/login"
-    headers = {
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "apikey": api_key
-    }
+    url = "https://api4.thetvdb.com/v4/login"
+    payload = {"apikey": api_key}
+    response = requests.post(url, json=payload)
+    response.raise_for_status()
+    return response.json()["data"]["token"]
 
-    response = requests.post(url, json=payload, headers=headers)
-
-    if response.status_code == 200:
-        return response.json().get("token")
-    else:
-        print(f"Failed to get token: {response.status_code}")
-        return None
 
 
 @app.route('/scrape_movies', methods=['GET'])    

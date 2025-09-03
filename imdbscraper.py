@@ -57,20 +57,17 @@ def get_tvshows(list_id, jwt_token):
     tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
 
     def get_tvdb_id(imdb_id, token=None):
-        if token is None:
-            raise Exception("TVDb JWT token not provided.")
-        url = f"https://api4.thetvdb.com/v4/search?imdbId={imdb_id}"
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/json"
-        }
-        resp = requests.get(url, headers=headers)
-        if resp.status_code != 200:
+        url = f"https://api4.thetvdb.com/v4/search/remoteid"
+        headers = {"Authorization": f"Bearer {token}"}
+        params = {"remote_id": imdb_id, "remote_source": "imdb"}
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data["data"]:
+            return data["data"][0]["tvdb_id"]
+        else:
             return None
-        data = resp.json()
-        if "data" in data and data["data"]:
-            return data["data"][0].get("tvdb_id") or data["data"][0].get("id")
-        return None
+
 
     tvshows_tvdb = []
     for show in tvshows_filtered:
