@@ -118,7 +118,7 @@ def get_tvshows(list_id, api_key):
         if imdb_id:
             tvdb_id = get_tvdb_id(imdb_id, jwt_token)
             tvshows_tvdb.append({
-                'imdb_id': imdb_id,
+                #'imdb_id': imdb_id,
                 'tvdbId': tvdb_id
             })
 
