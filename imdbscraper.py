@@ -52,12 +52,22 @@ def get_movies(list_id):
     movies_filtered = [item for item in listitems if item.get("type").lower() in ['movie', 'tv movie']]
     return jsonify(movies_filtered)
 
-def get_tvshows(list_id, jwt_token):
+def get_tvshows(list_id, api_key):
     listitems = get_list(list_id)
     tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
+    
+    def get_tvdb_token(api_key):
+        url = "https://api4.thetvdb.com/v4/login"
+        payload = {"apikey": api_key}
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+        return response.json()["data"]["token"]
 
 
+    jwt_token = get_tvdb_token(api_key)
+    
     def testToken(token):
+        print(token)
         url = "https://api4.thetvdb.com/v4/users"
         headers = {
             "Authorization": f"Bearer {token}",

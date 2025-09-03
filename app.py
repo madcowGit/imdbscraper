@@ -15,15 +15,6 @@ else:
     tvdbapikey = None
 
 
-def get_tvdb_token(api_key):
-    url = "https://api4.thetvdb.com/v4/login"
-    payload = {"apikey": api_key}
-    response = requests.post(url, json=payload)
-    response.raise_for_status()
-    return response.json()["data"]["token"]
-
-
-
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():
     # only use list_id as input
@@ -44,12 +35,7 @@ def scrape_tvshows():
     if not tvdbapikey:
         return jsonify({"error": "TVDB API key not configured"}), 500
 
-
-    token = get_tvdb_token(tvdbapikey)
-    
-    print(token)
-
-    tvshows = get_tvshows(list_id,token)
+    tvshows = get_tvshows(list_id,tvdbapikey)
 
     return tvshows
 
