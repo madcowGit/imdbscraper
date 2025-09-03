@@ -74,15 +74,14 @@ def get_tvshows(list_id, api_key):
         # Check if the token is valid
         if response.status_code == 200:
             print("✅ Token is valid.") 
-            if current_app.debug:
-                print(response.json())
+            print(response.json())
         else:                     
-            if current_app.debug:
-                print(response.status_code)
-                print(response.text)
+            print(response.status_code)
+            print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
-    #testToken(jwt_token)    
+    if current_app.debug:
+        testToken(jwt_token)    
 
     def get_tvdb_id(imdb_id, token=None):
         
@@ -100,10 +99,11 @@ def get_tvshows(list_id, api_key):
             print(data)                
         
         if data["data"]:
-            if set(data["data"][0].keys()) == {"series"}:
-                return data["data"][0]["series"]["id"]
-            elif set(data["data"][0].keys()) == {"movie"}:
-                return data["data"][0]["movie"]["id"]
+            item = data["data"][0]
+            if "series" in item:
+                return item["series"]["id"]
+            elif "movie" in item:
+                return item["movie"]["id"]
             else:
                 print(data["data"][0].keys())    # Should show: dict_keys(['---something-----'])
 
