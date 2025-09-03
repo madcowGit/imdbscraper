@@ -68,11 +68,7 @@ def get_tvshows(list_id, api_key):
     
     def testToken(token):
         url = "https://api4.thetvdb.com/v4/users"
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        }
-
+        headers = {"Authorization": f"Bearer {token}"}
         response = requests.get(url, headers=headers)
 
         # Check if the token is valid
