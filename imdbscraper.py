@@ -60,7 +60,8 @@ def get_tvshows(list_id, jwt_token):
     def testToken(token):
         url = "https://api4.thetvdb.com/v4/users"
         headers = {
-            "Authorization": f"Bearer {token}"
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
         }
 
         response = requests.get(url, headers=headers)
@@ -69,7 +70,9 @@ def get_tvshows(list_id, jwt_token):
         if response.status_code == 200:
             print("✅ Token is valid.")
             print(response.json())
-        else:
+        else:            
+            print(response.status_code)
+            print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
     testToken(jwt_token)    
