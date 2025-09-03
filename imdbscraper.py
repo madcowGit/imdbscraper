@@ -57,7 +57,7 @@ def get_tvshows(list_id, jwt_token):
     tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
 
 
-    def testToken(token)    
+    def testToken(token):
         url = "https://api4.thetvdb.com/v4/users"
         headers = {
             "Authorization": f"Bearer {token}"
