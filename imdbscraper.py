@@ -97,14 +97,17 @@ def get_tvshows(list_id, api_key):
         data = response.json()
         
         if current_app.debug:
-            print(data)        
-            print(data.keys())               # Should show: dict_keys(['status', 'data'])
-            print(data["data"])              # Should show: a list with one item
-            print(data["data"][0].keys())    # Should show: dict_keys(['series'])
-            print(data["data"][0]["series"]["name"])
+            print(data)                
         
         if data["data"]:
-            return data["data"][0]["series"]["id"]
+            if set(data["data"][0].keys()) == {"series"}:
+                return data["data"][0]["series"]["id"]
+            elif keys == {"movie"}:
+                return data["data"][0]["movie"]["id"]
+            else:
+                print(data["data"][0].keys())    # Should show: dict_keys(['---something-----'])
+
+            
         else:
             return None
 
