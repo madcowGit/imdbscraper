@@ -4,7 +4,7 @@ import os
 import requests
 
 app = Flask(__name__)
-
+app.debug = True
 
 # Load TVDB API key from Docker secrets file
 secrets_file_path = os.environ.get("TVDBAPISECRETSFILE")

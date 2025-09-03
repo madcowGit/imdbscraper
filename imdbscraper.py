@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, current_app
 import requests, json, jmespath
 from lxml import html
 
@@ -73,32 +73,39 @@ def get_tvshows(list_id, api_key):
 
         # Check if the token is valid
         if response.status_code == 200:
-            print("✅ Token is valid.")
-            #print(response.json())
-        else:            
-            #print(response.status_code)
-            #print(response.text)
+            print("✅ Token is valid.") 
+            if current_app.debug:
+                print(response.json())
+        else:                     
+            if current_app.debug:
+                print(response.status_code)
+                print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
     #testToken(jwt_token)    
 
     def get_tvdb_id(imdb_id, token=None):
-        #print(imdb_id)
-        #print(token)
+        
+        if current_app.debug:
+            print(imdb_id)
+            print(token)
+            
         url = f"https://api4.thetvdb.com/v4/search/remoteid/{imdb_id}"
         headers = {"Authorization": f"Bearer {token}"}        
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
         
-        print(data)        
-        print(data.keys())               # Should show: dict_keys(['status', 'data'])
-        print(data["data"])              # Should show: a list with one item
-        print(data["data"][0].keys())    # Should show: dict_keys(['movie'])
-        print(data["data"][0]["movie"]["name"])
+        if current_app.debug:
+            print(data)        
+            print(data.keys())               # Should show: dict_keys(['status', 'data'])
+            print(data["data"])              # Should show: a list with one item
+            print(data["data"][0].keys())    # Should show: dict_keys(['movie'])
+            print(data["data"][0]["movie"]["name"])
         
         if data["data"]:
-            return data["data"][0]["movie"]["id"]
+            #return data["data"][0]["movie"]["id"]
+            return data['data'][0]['movie']['id']
         else:
             return None
 
