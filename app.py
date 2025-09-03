@@ -15,8 +15,7 @@ else:
     tvdbapikey = None
 
 @app.route('/scrape_watchlist', methods=['GET'])    
-def scrape_watchlist():    
-    get_watchlist(user_id):
+def scrape_watchlist():        
     # only use user_id as input
     user_id = request.args.get('user_id')
     if not user_id:
