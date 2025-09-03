@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from imdbscraper import get_movies, get_tvshows, get_watchlist
+from imdbscraper import get_movies, get_tvshows, 
+from imdbscraper import get_list, get_watchlist
 import os
 import requests
 
@@ -25,7 +26,17 @@ def scrape_watchlist():
 
     return listitems
 
+@app.route('/scrape_list', methods=['GET'])    
+def scrape_list():
+    # only use list_id as input
+    list_id = request.args.get('list_id')
+    if not list_id:
+        return jsonify({"error": "Missing 'list' parameter"}), 400
 
+    movies = get_list(list_id)
+
+    return jsonify(movies)
+    
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():
     # only use list_id as input
