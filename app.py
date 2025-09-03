@@ -14,6 +14,18 @@ if secrets_file_path and os.path.exists(secrets_file_path):
 else:
     tvdbapikey = None
 
+@app.route('/scrape_watchlist', methods=['GET'])    
+def scrape_watchlist():    
+    get_watchlist(user_id):
+    # only use user_id as input
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({"error": "Missing 'list' parameter"}), 400
+
+    listitems = get_watchlist(user_id)
+
+    return listitems
+
 
 @app.route('/scrape_movies', methods=['GET'])    
 def scrape_movies():

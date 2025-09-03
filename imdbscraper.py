@@ -26,6 +26,34 @@ def update_list(movies, processed_json):
         })
     return movies
 
+def get_watchlist(user_id):
+    base_url = f"https://www.imdb.com/user/{user_id}/watchlist"
+    watchlist_xpath = "props.pageProps.watchlist"
+
+    listitems = []
+    page_num = 1
+    next_page = True
+
+    while next_page:
+        url = f"{base_url}?page={page_num}"
+        raw_json = get_html(url)
+        if not raw_json:
+            return jsonify({"error": f"Failed to fetch IMDb watchlist page {page_num}"}), 500
+
+        # Extract items and pagination info
+        processed_json = jmespath.search(
+            f"{watchlist_xpath}.items[].{{id: id, title: title.titleText.text, type: title.titleType.text}}",
+            raw_json
+        )
+        next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
+
+        if processed_json:
+            listitems = update_list(listitems, processed_json)
+
+        page_num += 1
+
+    return listitems
+
 def get_list(list_id):
     base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
     raw_json = get_html(base_url)
