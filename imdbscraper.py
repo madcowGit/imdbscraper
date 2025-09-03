@@ -67,7 +67,6 @@ def get_tvshows(list_id, api_key):
     jwt_token = get_tvdb_token(api_key)
     
     def testToken(token):
-        print(token)
         url = "https://api4.thetvdb.com/v4/users"
         headers = {
             "Authorization": f"Bearer {token}",
@@ -89,6 +88,7 @@ def get_tvshows(list_id, api_key):
 
     def get_tvdb_id(imdb_id, token=None):
         print(imdb_id)
+        print(token)
         url = f"https://api4.thetvdb.com/v4/search/remoteid"
         headers = {"Authorization": f"Bearer {token}"}
         params = {"remote_id": imdb_id, "remote_source": "imdb"}
@@ -105,7 +105,7 @@ def get_tvshows(list_id, api_key):
     for show in tvshows_filtered:
         imdb_id = show.get('imdb_id')
         if imdb_id:
-            tvdb_id = get_tvdb_id(imdb_id, token=jwt_token)
+            tvdb_id = get_tvdb_id(imdb_id, jwt_token)
             tvshows_tvdb.append({
                 'imdb_id': imdb_id,
                 'tvdbId': tvdb_id
