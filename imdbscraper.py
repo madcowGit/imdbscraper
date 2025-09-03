@@ -34,6 +34,9 @@ def get_watchlist(user_id):
     page_num = 1
     next_page = True
 
+    if current_app.debug:
+        print(f"get user watchlist: {base_url}")       
+        
     while next_page:
         url = f"{base_url}?page={page_num}"
         raw_json = get_html(url)
@@ -66,12 +69,17 @@ def get_watchlist(user_id):
 
 def get_list(list_id):    
     if list_id.startswith("ls"):
-        get_list(list_id)
+        imdblist = get_list(list_id)
     elif list_id.startswith("ur"):
-        get_watchlist(list_id)
+        imdblist = get_watchlist(list_id)
+    return imdblist
 
 def get_userlist(list_id):
     base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
+    
+    if current_app.debug:
+        print(f"get userlist: {base_url}")       
+        
     raw_json = get_html(base_url)
     if not raw_json:
         return jsonify({"error": "Failed to fetch IMDb page"}), 500
