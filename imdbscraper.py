@@ -77,7 +77,7 @@ def get_list(list_id):
 
 def get_movies(list_id):
     listitems = get_list(list_id)
-    movies_filtered = [item for item in listitems if item.get("type").lower() in ['movie', 'tv movie']]
+    movies_filtered = [item for item in listitems if item.get("type").lower() in ['movie', 'tv movie', 'tv special', 'short']]
     return jsonify(movies_filtered)
 
 def get_tvshows(list_id, api_key):
