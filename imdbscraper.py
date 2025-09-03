@@ -28,7 +28,7 @@ def update_list(movies, processed_json):
 
 def get_watchlist(user_id):
     base_url = f"https://www.imdb.com/user/{user_id}/watchlist"
-    watchlist_xpath = "props.pageProps.mainColumnData"
+    watchlist_xpath = "props.pageProps.mainColumnData.predefinedList.titleListItemSearch"
 
     listitems = []
     page_num = 1
@@ -42,11 +42,11 @@ def get_watchlist(user_id):
 
         # Extract items and pagination info
         processed_json = jmespath.search(
-            f"{watchlist_xpath}.titleListItemSearch.edges[].listItem.{{id: id, title: title.titleText.text, type: title.titleType.text}}",
+            f"{watchlist_xpath}.edges[].listItem.{{id: id, title: title.titleText.text, type: title.titleType.text}}",
             raw_json            
 
         )
-        next_page = jmespath.search(f"{watchlist_xpath}.predefinedList.titleListItemSearch.pageInfo.hasNextPage", raw_json)
+        next_page = jmespath.search(f"{watchlist_xpath}.pageInfo.hasNextPage", raw_json)
         
         print(f"total nr of items = {raw_json['props']['pageProps']['totalItems']}")
         print(f"ManUp = {raw_json['props']['pageProps']['mainColumnData']['predefinedList']['titleListItemSearch']['edges'][0]['listItem']['id']}")
