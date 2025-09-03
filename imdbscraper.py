@@ -102,7 +102,7 @@ def get_tvshows(list_id, api_key):
         if data["data"]:
             if set(data["data"][0].keys()) == {"series"}:
                 return data["data"][0]["series"]["id"]
-            elif keys == {"movie"}:
+            elif set(data["data"][0].keys()) == {"movie"}:
                 return data["data"][0]["movie"]["id"]
             else:
                 print(data["data"][0].keys())    # Should show: dict_keys(['---something-----'])
