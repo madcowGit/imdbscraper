@@ -99,7 +99,7 @@ def get_movies(list_id):
 
 def get_tvshows(list_id, api_key):
     listitems = get_list(list_id)
-    tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode', 'tv special']]
+    tvshows_filtered = [item for item in listitems if item.get("type").lower() in ['tv series', 'tv mini series', 'tv episode']]
     
     def get_tvdb_token(api_key):
         url = "https://api4.thetvdb.com/v4/login"
