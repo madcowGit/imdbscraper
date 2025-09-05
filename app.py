@@ -7,14 +7,14 @@ app = Flask(__name__)
 #app.debug = True
 
 # Load TVDB API key from Docker secrets file
-if "TVDBAPISECRETSFILE" in os.envir:
+if "TVDBAPISECRETSFILE" in os.environ:
     secrets_file_path = os.environ.get("TVDBAPISECRETSFILE")
     if secrets_file_path and os.path.exists(secrets_file_path):
         with open(secrets_file_path, "r") as f:
             tvdbapikey = f.read().strip()
     else:
         tvdbapikey = None
-elif "TVDBAPIKEY" in os.envir:
+elif "TVDBAPIKEY" in os.environ:
     # Load TVDB API key from GithubActions secrets file
     tvdbapikey = os.environ.get("TVDBAPIKEY")
     
