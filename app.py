@@ -24,7 +24,7 @@ def scrape_movies():
 
     movies = get_movies(list_id)
 
-    return movies
+    return jsonify(movies)
 
 @app.route('/scrape_tvshows', methods=['GET'])    
 def scrape_tvshows():
@@ -37,7 +37,7 @@ def scrape_tvshows():
 
     tvshows = get_tvshows(list_id,tvdbapikey)
 
-    return tvshows
+    return jsonify(tvshows)
 
 if __name__ == '__main__':
     import os
