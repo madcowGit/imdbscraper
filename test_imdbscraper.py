@@ -11,7 +11,7 @@ tvdbapikey = os.environ.get("TVDBAPIKEY")
     
 class TestIMDBScraper(unittest.TestCase):
     def test_get_movies(self):
-        return_value = [{"imdb_id":"tt11655566","type":"Movie"},{"imdb_id":"tt33130902","type":"TV Special"},{"imdb_id":"tt31908384","type":"TV Movie"},{"imdb_id":"tt1118511","type":"Short"}]
+        return_value = json.dumps([{"imdb_id":"tt11655566","type":"Movie"},{"imdb_id":"tt33130902","type":"TV Special"},{"imdb_id":"tt31908384","type":"TV Movie"},{"imdb_id":"tt1118511","type":"Short"}])
         response = imdbscraper.get_movies('ls569954785')
         print(json.dumps(response))
         self.assertIn(return_value, json.dumps(response))
@@ -20,7 +20,7 @@ class TestIMDBScraper(unittest.TestCase):
         return_value = [{"tvdbId":350984},{"tvdbId":251645}]
         response = imdbscraper.get_tvshows('ls569954785', tvdbapikey)
         print(json.dumps(response))
-        self.assertIn(return_value, json.dumps(response))
+        self.assertIn(return_value, response)
 
 # class TestAppRoutes(unittest.TestCase):
 
