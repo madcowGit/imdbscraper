@@ -48,8 +48,8 @@ class TestAppRoutes(unittest.TestCase):
             mimetype='application/json'
         )
         response = self.app.get('/scrape_tvshows?list_id=ls569954785')
-        print(json.dumps(response.response))
         print(response.status_code)
+        print(response.get_json())
         self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
