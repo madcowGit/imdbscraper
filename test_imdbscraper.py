@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from app import app
 import imdbscraper
+import os
 
 # Load TVDB API key from Docker secrets file
 secrets_file_path = os.environ.get("TVDBAPISECRETSFILE")
