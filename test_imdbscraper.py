@@ -31,7 +31,7 @@ class TestAppRoutes(unittest.TestCase):
         response = self.app.get('/scrape_tvshows?list_id=ls569954785')
         print(response.status_code)
         print(response.get_json())
-        self.assertEqual(json.loads(return_value.response.get_json()), json.loads(response.get_json()))
+        self.assertEqual(json.loads(return_value.get_data()), json.loads(response.get_json()))
         self.assertEqual(response.status_code, 200)
     
     def test_scrape_movies_watchlist_route(self):   
