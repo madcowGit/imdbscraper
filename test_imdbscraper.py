@@ -4,31 +4,24 @@ from unittest.mock import patch, MagicMock
 from app import app
 import imdbscraper
 
+# Load TVDB API key from Docker secrets file
+secrets_file_path = os.environ.get("TVDBAPISECRETSFILE")
+if secrets_file_path and os.path.exists(secrets_file_path):
+    with open(secrets_file_path, "r") as f:
+        tvdbapikey = f.read().strip()
+else:
+    tvdbapikey = None
+    
 class TestIMDBScraper(unittest.TestCase):
+    def test_get_movies(self):
+        return_value = [{"imdb_id":"tt11655566","type":"Movie"},{"imdb_id":"tt33130902","type":"TV Special"},{"imdb_id":"tt31908384","type":"TV Movie"},{"imdb_id":"tt1118511","type":"Short"}]
+        response = imdbscraper.get_movies('ls569954785')
+        self.assertIn(return_value, response.json)
 
-    @patch('imdbscraper.get_list')
-    def test_get_movies(self, mock_get_list):
-        mock_get_list.return_value = [
-            {'imdb_id': 'tt1234567', 'type': 'movie'},
-            {'imdb_id': 'tt7654321', 'type': 'tv series'}
-        ]
-        response = imdbscraper.get_movies('ls123')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn({'imdb_id': 'tt1234567', 'type': 'movie'}, response.json)
-
-    @patch('imdbscraper.get_list')
-    @patch('imdbscraper.get_tvdb_id')
-    @patch('imdbscraper.get_tvdb_token')
-    def test_get_tvshows(self, mock_token, mock_tvdb_id, mock_get_list):
-        mock_token.return_value = 'fake_token'
-        mock_tvdb_id.return_value = 12345
-        mock_get_list.return_value = [
-            {'imdb_id': 'tt1234567', 'type': 'tv series'},
-            {'imdb_id': 'tt7654321', 'type': 'movie'}
-        ]
-        response = imdbscraper.get_tvshows('ls123', 'fake_api_key')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn({'tvdbId': 12345}, response.json)
+    def test_get_tvshows(self):
+        return_value = [{"tvdbId":'350984'},{"tvdbId":'251645'}]
+        response = imdbscraper.get_tvshows('ls569954785', tvdbapikey)
+        self.assertIn(return_value, response.json)
 
 class TestAppRoutes(unittest.TestCase):
 
@@ -36,26 +29,23 @@ class TestAppRoutes(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
-    @patch('imdbscraper.get_movies')
-    def test_scrape_movies_route(self, mock_get_movies):
-        mock_get_movies.return_value = app.response_class(
-            response='[{"imdb_id": "tt1234567", "type": "movie"}]',
+    def test_scrape_movies_route(self):
+        return_value = app.response_class(
+            response='[{"imdb_id":"tt11655566","type":"Movie"},{"imdb_id":"tt33130902","type":"TV Special"},{"imdb_id":"tt31908384","type":"TV Movie"},{"imdb_id":"tt1118511","type":"Short"}]',
             status=200,
             mimetype='application/json'
         )
-        response = self.app.get('/scrape_movies?list_id=ls123')
+        response = self.app.get('/scrape_movies?list_id=ls569954785')
         self.assertEqual(response.status_code, 200)
 
-    @patch('imdbscraper.get_tvshows')
-    def test_scrape_tvshows_route(self, mock_get_tvshows):
-        mock_get_tvshows.return_value = app.response_class(
-            response='[{"tvdbId": 12345}]',
+    def test_scrape_tvshows_route(self):
+        return_value = app.response_class(
+            response='[{"tvdbId":350984},{"tvdbId":251645}]',
             status=200,
             mimetype='application/json'
         )
-        with patch('app.tvdbapikey', 'fake_api_key'):
-            response = self.app.get('/scrape_tvshows?list_id=ls123')
-            self.assertEqual(response.status_code, 200)
+        response = self.app.get('/scrape_tvsshows?list_id=ls569954785')
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()
