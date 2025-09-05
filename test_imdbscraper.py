@@ -4,6 +4,7 @@ from unittest.mock import patch, MagicMock
 from app import app
 import imdbscraper
 import os
+import json
 
 # Load TVDB API key from GithubActions secrets file
 tvdbapikey = os.environ.get("TVDBAPIKEY")
@@ -41,6 +42,7 @@ class TestAppRoutes(unittest.TestCase):
             mimetype='application/json'
         )
         response = self.app.get('/scrape_tvshows?list_id=ls569954785')
+        print(json.dumps(response))
         self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
