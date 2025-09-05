@@ -34,8 +34,7 @@ def get_watchlist(user_id):
     page_num = 1
     next_page = True
 
-    if current_app.debug:
-        print(f"get user watchlist: {base_url}")       
+    print(f"get user watchlist: {base_url}")       
         
     while next_page:
         url = f"{base_url}?page={page_num}"
@@ -70,8 +69,7 @@ def get_list(list_id):
 def get_userlist(list_id):
     base_url = f"https://www.imdb.com/list/{list_id}/?sort=release_date,desc"
     
-    if current_app.debug:
-        print(f"get userlist: {base_url}")       
+    print(f"get userlist: {base_url}")       
         
     raw_json = get_html(base_url)
     if not raw_json:
@@ -125,14 +123,14 @@ def get_tvshows(list_id, api_key):
             print(response.text)
             print(f"❌ Token is invalid or expired. Status code: {response.status_code}")
 
-    if current_app.debug:
-        testToken(jwt_token)    
+    #if current_app.debug:
+    #    testToken(jwt_token)    
 
     def get_tvdb_id(imdb_id, token=None):
         
-        if current_app.debug:
-            print(imdb_id)
-            print(token)
+        #if current_app.debug:
+        #    print(imdb_id)
+        #    print(token)
             
         url = f"https://api4.thetvdb.com/v4/search/remoteid/{imdb_id}"
         headers = {"Authorization": f"Bearer {token}"}        
@@ -140,8 +138,8 @@ def get_tvshows(list_id, api_key):
         response.raise_for_status()
         data = response.json()
         
-        if current_app.debug:
-            print(data)                
+    #    if current_app.debug:
+    #        print(data)                
         
         if data["data"]:
             item = data["data"][0]

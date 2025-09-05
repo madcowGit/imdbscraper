@@ -11,6 +11,9 @@ jobs:
       matrix:
         python-version: [3.11]
 
+    env:
+      TVDBAPIKEY: ${{ secrets.TVDBAPIKEY }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
