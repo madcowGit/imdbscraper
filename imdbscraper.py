@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, current_app
+from flask import jsonify, current_app
 import requests, json, jmespath
 from lxml import html
 
