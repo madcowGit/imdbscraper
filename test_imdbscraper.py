@@ -17,10 +17,10 @@ class TestIMDBScraper(unittest.TestCase):
         self.assertIn(return_value, json.dumps(response))
 
     def test_get_tvshows(self):
-        return_value = [{"tvdbId":350984},{"tvdbId":251645}]
+        return_value = json.dumps([{"tvdbId":350984},{"tvdbId":251645}])
         response = imdbscraper.get_tvshows('ls569954785', tvdbapikey)
         print(json.dumps(response))
-        self.assertIn(return_value, response)
+        self.assertIn(return_value, json.dumps(response))
 
 # class TestAppRoutes(unittest.TestCase):
 
