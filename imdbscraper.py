@@ -40,7 +40,8 @@ def get_watchlist(user_id):
     while next_page:
         url = f"{base_url}?page={page_num}"
         raw_json = get_html(url)
-        if not raw_json:
+        if not raw_json:            
+            print("Failed to fetch IMDb watchlist page")
             return jsonify({"error": f"Failed to fetch IMDb watchlist page {page_num}"}), 500
 
         # Extract items and pagination info
@@ -73,7 +74,8 @@ def get_userlist(list_id):
     print(f"get userlist: {base_url}")       
         
     raw_json = get_html(base_url)
-    if not raw_json:
+    if not raw_json:        
+        print("Failed to fetch IMDb page")
         return jsonify({"error": "Failed to fetch IMDb page"}), 500
 
     total = jmespath.search(f"{xpath}total", raw_json)

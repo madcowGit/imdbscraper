@@ -33,6 +33,7 @@ def scrape_tvshows():
     if not list_id:
         return jsonify({"error": "Missing 'list_id' parameter"}), 400
     if not tvdbapikey:
+        print("TVDB API key not configured")
         return jsonify({"error": "TVDB API key not configured"}), 500
 
     tvshows = get_tvshows(list_id,tvdbapikey)
