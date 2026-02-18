@@ -5,6 +5,10 @@
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?style=for-the-badge&logo=docker)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python)
 
+# DEPRECATED
+No longer works, because imdb changed how lists are provided to the webpage. 
+Project will no longer be maintained
+
 # Description
 This is a docker container flask app that scrapes an IMDB list (and works for lists consisting of multiple pages) and returns a list for Radarr or Sonarr. Supports watchlists (ur######) and other lists (ls#########)
 
